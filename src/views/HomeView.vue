@@ -9,7 +9,7 @@
         <button @click="goToInvestigation" class="btn btn-neutral">
           งานสืบสวน
         </button>
-        <button @click="goToInquiry" class="btn btn-warning">งานสอบสวน</button>
+        <!-- <button @click="goToInquiry" class="btn btn-warning">งานสอบสวน</button> -->
       </div>
     </div>
   </div>
@@ -28,7 +28,7 @@ const goToInvestigation = () => {
   router.push({ name: "investigation" });
 };
 
-const goToInquiry = () => {
-  router.push({ name: "inquiry" });
-};
+// const goToInquiry = () => {
+//   router.push({ name: "inquiry" });
+// };
 </script>

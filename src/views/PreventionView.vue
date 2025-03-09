@@ -302,7 +302,7 @@ const copyReport = () => {
         <button
           v-if="!showForm"
           @click="showForm = true"
-          class="btn btn-primary mb-4"
+          class="btn btn-accent mb-4"
         >
           แก้ไขข้อมูล
         </button>
@@ -374,7 +374,7 @@ const copyReport = () => {
           <div class="bg-neutral-content p-4 rounded-lg hover:shadow-lg">
             <label class="label">
               <span class="label-text mb-1"
-                >สิ่งที่ทำ (เลือกได้หลายรายการ)</span
+                >🔴 สิ่งที่ทำ (เลือกได้หลายรายการ)</span
               >
             </label>
             <div class="mt-2 space-y-2">
@@ -416,7 +416,7 @@ const copyReport = () => {
           <div class="bg-neutral-content p-4 rounded-lg hover:shadow-lg">
             <label class="label">
               <span class="label-text mb-1"
-                >ตรวจเยี่ยมสถานที่ ธนาคาร ร้านทอง ฯ</span
+                >🔴 ตรวจเยี่ยมสถานที่ ธนาคาร ร้านทอง ฯ</span
               >
             </label>
 
@@ -498,7 +498,7 @@ const copyReport = () => {
           <div class="bg-neutral-content p-4 rounded-lg hover:shadow-lg">
             <label class="label">
               <span class="label-text mb-1"
-                >การรตั้งจุดตรวจ POP UP ถนนสายหลัก</span
+                >🔴 การรตั้งจุดตรวจ POP UP ถนนสายหลัก</span
               >
             </label>
 
@@ -534,7 +534,7 @@ const copyReport = () => {
           <div class="bg-neutral-content p-4 rounded-lg hover:shadow-lg">
             <label class="label">
               <span class="label-text mb-1"
-                >การรตั้งจุดตรวจ POP UP ถนนสายรอง</span
+                >🔴 การรตั้งจุดตรวจ POP UP ถนนสายรอง</span
               >
             </label>
 
@@ -569,7 +569,7 @@ const copyReport = () => {
           <!-- ผลการปฏิบัติ Line bot -->
           <div class="bg-neutral-content p-4 rounded-lg hover:shadow-lg">
             <label class="label">
-              <span class="label-text mb-1">ผลการปฏิบัติ Line bot</span>
+              <span class="label-text mb-1">🔴 ผลการปฏิบัติ Line bot</span>
             </label>
 
             <div class="grid grid-cols-2 grid-rows-2 gap-4">
@@ -615,7 +615,7 @@ const copyReport = () => {
           <div class="bg-neutral-content p-4 rounded-lg hover:shadow-lg">
             <label class="label">
               <span class="label-text mb-1"
-                >มาตรการป้องกันปราบปรามการแข่งรถในทาง</span
+                >🔴 มาตรการป้องกันปราบปรามการแข่งรถในทาง</span
               >
             </label>
 
@@ -623,7 +623,7 @@ const copyReport = () => {
               <div>
                 <label class="input w-full">
                   <span class="label text-black"
-                    >เปิดสัญญาณไฟ/ลว.เส้นทางตรวจสอบกลุ่มรถซิ่ง</span
+                    >ลว.เส้นทางตรวจสอบกลุ่มรถซิ่ง</span
                   >
                   <input
                     type="number"
@@ -635,9 +635,7 @@ const copyReport = () => {
               </div>
               <div>
                 <label class="input w-full">
-                  <span class="label text-black"
-                    >ตรวจร้านซ่อมรถ/ขายอะไหล่ และประชาสัมพันธ์</span
-                  >
+                  <span class="label text-black">ตรวจร้านซ่อมรถ/ขายอะไหล่</span>
                   <input
                     type="number"
                     v-model="formData.racingRepairShopCount"
@@ -651,7 +649,7 @@ const copyReport = () => {
               <div>
                 <label class="input w-full">
                   <span class="label text-black"
-                    >จัดทำประวัติบุคคลที่มีพฤติกรรมเสี่ยงแข่งรถ ฯ</span
+                    >จัดทำประวัติบุคคลกลุ่มเสี่ยงแข่งรถ ฯ</span
                   >
                   <input
                     type="number"
@@ -665,9 +663,7 @@ const copyReport = () => {
               </div>
               <div>
                 <label class="input w-full">
-                  <span class="label text-black"
-                    >ตรวจยึด จยย. แต่งซิ่ง อุปกรณ์ส่วนควบไม่ครบ</span
-                  >
+                  <span class="label text-black">ตรวจยึด จยย. แต่งซิ่ง</span>
                   <input
                     type="number"
                     v-model="formData.racingConfiscateCount"
@@ -681,7 +677,7 @@ const copyReport = () => {
               <div>
                 <label class="input w-full">
                   <span class="label text-black"
-                    >ประชาสัมพันธ์แจ้งเตือนรถยนต์เฝ้าระวังพิเศษสูงสุด</span
+                    >แจ้งเตือนรถยนต์เฝ้าระวังสูงสุด</span
                   >
                   <input
                     type="number"
@@ -697,7 +693,7 @@ const copyReport = () => {
           <!-- ตรวจยึดยานพาหนะ ตรวจสอบ -->
           <div class="bg-neutral-content p-4 rounded-lg hover:shadow-lg">
             <label class="label">
-              <span class="label-text mb-1">ตรวจยึดยานพาหนะ ตรวจสอบ</span>
+              <span class="label-text mb-1">🔴 ตรวจยึดยานพาหนะ ตรวจสอบ</span>
             </label>
 
             <div class="grid grid-cols-2 grid-rows-1 gap-4">
@@ -732,7 +728,7 @@ const copyReport = () => {
           <div class="bg-neutral-content p-4 rounded-lg hover:shadow-lg">
             <label class="label">
               <span class="label-text mb-1"
-                >ทำประวัติกลุ่มเสี่ยง / จัดเก็บ DNA / พิมพ์มือ</span
+                >🔴 ทำประวัติกลุ่มเสี่ยง / จัดเก็บ DNA / พิมพ์มือ</span
               >
             </label>
 
@@ -778,7 +774,7 @@ const copyReport = () => {
           <!-- ผลการจับกุมข้อหาต่าง ๆ -->
           <div class="bg-neutral-content p-4 rounded-lg hover:shadow-lg">
             <label class="label">
-              <span class="label-text mb-1">ผลการจับกุมข้อหาต่าง ๆ</span>
+              <span class="label-text mb-1">🔴 ผลการจับกุมข้อหาต่าง ๆ</span>
             </label>
 
             <div class="grid grid-cols-2 grid-rows-3 gap-4">
