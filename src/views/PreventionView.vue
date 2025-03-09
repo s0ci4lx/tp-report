@@ -321,6 +321,7 @@ const copyReport = () => {
                 type="datetime-local"
                 v-model="formData.dateTime"
                 class="input input-bordered"
+                :class="{ 'bg-green-50': formData.dateTime }"
               />
             </label>
           </div>
@@ -333,6 +334,7 @@ const copyReport = () => {
                 required
                 v-model="formData.teamLeader"
                 class="select select-bordered w-full"
+                :class="{ 'bg-green-50': formData.teamLeader !== '' }"
               >
                 <option disabled value="">กรุณาเลือกหัวหน้าชุดปฏิบัติ</option>
                 <option
@@ -354,6 +356,7 @@ const copyReport = () => {
                 required
                 v-model="formData.teamName"
                 class="select select-bordered w-full"
+                :class="{ 'bg-green-50': formData.teamName !== '' }"
               >
                 <option disabled value="">กรุณาเลือกชื่อชุดปฏิบัติ</option>
                 <option
@@ -425,6 +428,7 @@ const copyReport = () => {
                     type="number"
                     v-model="formData.gasStationCount"
                     class="input input-bordered"
+                    :class="{ 'bg-green-50': formData.gasStationCount > 0 }"
                   />
                 </label>
               </div>
@@ -435,6 +439,7 @@ const copyReport = () => {
                     type="number"
                     v-model="formData.bankCount"
                     class="input input-bordered"
+                    :class="{ 'bg-green-50': formData.bankCount > 0 }"
                   />
                 </label>
               </div>
@@ -445,6 +450,7 @@ const copyReport = () => {
                     type="number"
                     v-model="formData.goldShopCount"
                     class="input input-bordered"
+                    :class="{ 'bg-green-50': formData.goldShopCount > 0 }"
                   />
                 </label>
               </div>
@@ -455,6 +461,9 @@ const copyReport = () => {
                     type="number"
                     v-model="formData.convenienceStoreCount"
                     class="input input-bordered"
+                    :class="{
+                      'bg-green-50': formData.convenienceStoreCount > 0,
+                    }"
                   />
                 </label>
               </div>
@@ -465,6 +474,7 @@ const copyReport = () => {
                     type="number"
                     v-model="formData.atmCount"
                     class="input input-bordered"
+                    :class="{ 'bg-green-50': formData.atmCount > 0 }"
                   />
                 </label>
               </div>
@@ -477,6 +487,7 @@ const copyReport = () => {
                     type="number"
                     v-model="formData.riskPointCount"
                     class="input input-bordered"
+                    :class="{ 'bg-green-50': formData.riskPointCount > 0 }"
                   />
                 </label>
               </div>
@@ -499,6 +510,7 @@ const copyReport = () => {
                     type="number"
                     v-model="formData.mainRoadCarCount"
                     class="input input-bordered"
+                    :class="{ 'bg-green-50': formData.mainRoadCarCount > 0 }"
                   />
                 </label>
               </div>
@@ -509,6 +521,9 @@ const copyReport = () => {
                     type="number"
                     v-model="formData.mainRoadMotorcycleCount"
                     class="input input-bordered"
+                    :class="{
+                      'bg-green-50': formData.mainRoadMotorcycleCount > 0,
+                    }"
                   />
                 </label>
               </div>
@@ -531,6 +546,7 @@ const copyReport = () => {
                     type="number"
                     v-model="formData.sideRoadCarCount"
                     class="input input-bordered"
+                    :class="{ 'bg-green-50': formData.sideRoadCarCount > 0 }"
                   />
                 </label>
               </div>
@@ -541,6 +557,9 @@ const copyReport = () => {
                     type="number"
                     v-model="formData.sideRoadMotorcycleCount"
                     class="input input-bordered"
+                    :class="{
+                      'bg-green-50': formData.sideRoadMotorcycleCount > 0,
+                    }"
                   />
                 </label>
               </div>
@@ -561,6 +580,7 @@ const copyReport = () => {
                     type="number"
                     v-model="formData.lineBotCarCount"
                     class="input input-bordered"
+                    :class="{ 'bg-green-50': formData.lineBotCarCount > 0 }"
                   />
                 </label>
               </div>
@@ -571,6 +591,9 @@ const copyReport = () => {
                     type="number"
                     v-model="formData.lineBotMotorcycleCount"
                     class="input input-bordered"
+                    :class="{
+                      'bg-green-50': formData.lineBotMotorcycleCount > 0,
+                    }"
                   />
                 </label>
               </div>
@@ -581,6 +604,7 @@ const copyReport = () => {
                     type="number"
                     v-model="formData.lineBotPersonCount"
                     class="input input-bordered"
+                    :class="{ 'bg-green-50': formData.lineBotPersonCount > 0 }"
                   />
                 </label>
               </div>
@@ -605,6 +629,7 @@ const copyReport = () => {
                     type="number"
                     v-model="formData.racingSignalCount"
                     class="input input-bordered"
+                    :class="{ 'bg-green-50': formData.racingSignalCount > 0 }"
                   />
                 </label>
               </div>
@@ -617,6 +642,9 @@ const copyReport = () => {
                     type="number"
                     v-model="formData.racingRepairShopCount"
                     class="input input-bordered"
+                    :class="{
+                      'bg-green-50': formData.racingRepairShopCount > 0,
+                    }"
                   />
                 </label>
               </div>
@@ -629,6 +657,9 @@ const copyReport = () => {
                     type="number"
                     v-model="formData.racingRiskProfileCount"
                     class="input input-bordered"
+                    :class="{
+                      'bg-green-50': formData.racingRiskProfileCount > 0,
+                    }"
                   />
                 </label>
               </div>
@@ -641,6 +672,9 @@ const copyReport = () => {
                     type="number"
                     v-model="formData.racingConfiscateCount"
                     class="input input-bordered"
+                    :class="{
+                      'bg-green-50': formData.racingConfiscateCount > 0,
+                    }"
                   />
                 </label>
               </div>
@@ -653,6 +687,7 @@ const copyReport = () => {
                     type="number"
                     v-model="formData.racingWarningCount"
                     class="input input-bordered"
+                    :class="{ 'bg-green-50': formData.racingWarningCount > 0 }"
                   />
                 </label>
               </div>
@@ -673,6 +708,7 @@ const copyReport = () => {
                     type="number"
                     v-model="formData.confiscateCarCount"
                     class="input input-bordered"
+                    :class="{ 'bg-green-50': formData.confiscateCarCount > 0 }"
                   />
                 </label>
               </div>
@@ -683,6 +719,9 @@ const copyReport = () => {
                     type="number"
                     v-model="formData.confiscateMotorcycleCount"
                     class="input input-bordered"
+                    :class="{
+                      'bg-green-50': formData.confiscateMotorcycleCount > 0,
+                    }"
                   />
                 </label>
               </div>
@@ -707,6 +746,7 @@ const copyReport = () => {
                     type="number"
                     v-model="formData.riskProfileCount"
                     class="input input-bordered"
+                    :class="{ 'bg-green-50': formData.riskProfileCount > 0 }"
                   />
                 </label>
               </div>
@@ -717,6 +757,7 @@ const copyReport = () => {
                     type="number"
                     v-model="formData.dnaCollectionCount"
                     class="input input-bordered"
+                    :class="{ 'bg-green-50': formData.dnaCollectionCount > 0 }"
                   />
                 </label>
               </div>
@@ -727,6 +768,7 @@ const copyReport = () => {
                     type="number"
                     v-model="formData.fingerprintCount"
                     class="input input-bordered"
+                    :class="{ 'bg-green-50': formData.fingerprintCount > 0 }"
                   />
                 </label>
               </div>
@@ -747,6 +789,7 @@ const copyReport = () => {
                     type="number"
                     v-model="formData.drugArrestCount"
                     class="input input-bordered"
+                    :class="{ 'bg-green-50': formData.drugArrestCount > 0 }"
                   />
                 </label>
               </div>
@@ -757,6 +800,7 @@ const copyReport = () => {
                     type="number"
                     v-model="formData.gunArrestCount"
                     class="input input-bordered"
+                    :class="{ 'bg-green-50': formData.gunArrestCount > 0 }"
                   />
                 </label>
               </div>
@@ -767,6 +811,7 @@ const copyReport = () => {
                     type="number"
                     v-model="formData.gamblingArrestCount"
                     class="input input-bordered"
+                    :class="{ 'bg-green-50': formData.gamblingArrestCount > 0 }"
                   />
                 </label>
               </div>
@@ -777,6 +822,7 @@ const copyReport = () => {
                     type="number"
                     v-model="formData.otherArrestCount"
                     class="input input-bordered"
+                    :class="{ 'bg-green-50': formData.otherArrestCount > 0 }"
                   />
                 </label>
               </div>
@@ -787,6 +833,7 @@ const copyReport = () => {
                     type="number"
                     v-model="formData.localWarrantCount"
                     class="input input-bordered"
+                    :class="{ 'bg-green-50': formData.localWarrantCount > 0 }"
                   />
                 </label>
               </div>
@@ -797,6 +844,7 @@ const copyReport = () => {
                     type="number"
                     v-model="formData.otherWarrantCount"
                     class="input input-bordered"
+                    :class="{ 'bg-green-50': formData.otherWarrantCount > 0 }"
                   />
                 </label>
               </div>
@@ -834,3 +882,12 @@ const copyReport = () => {
     </div>
   </div>
 </template>
+
+<style>
+.bg-green-50 {
+  background-color: #bff3ce; /* สีเขียวอ่อน */
+}
+.bg-red-50 {
+  background-color: #f8bebe; /* สีเขียวอ่อน */
+}
+</style>
