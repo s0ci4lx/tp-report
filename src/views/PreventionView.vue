@@ -15,7 +15,8 @@ const goBack = () => {
   router.push({ name: "home" });
 };
 
-const selectedWorkType = ref(""); // สายงานที่เลือก
+const showForm = ref(true); // ตัวแปรควบคุมการแสดงผลของฟอร์ม
+
 const formData = ref({
   dateTime: dayjs().format("YYYY-MM-DDTHH:mm"), // วันที่และเวลาปัจจุบัน
   workType: "งานป้องกันปราบปราม", // สายงานที่เลือก
@@ -151,9 +152,10 @@ const generateReport = () => {
     "D MMMM BB เวลา HH:mm น."
   );
 
+  showForm.value = false;
   let reportSections = [];
 
-  reportSections.push(`:: เรียน ผู้บังคับบัญชา
+  reportSections.push(`เรียน ผู้บังคับบัญชา
  สภ.เทพา วันที่ ${formattedDate}
 ภายใต้การอำนวยการของ 
  พ.ต.อ.เฉลิมชัย เพชรกาศ ผกก.สภ.เทพา
@@ -247,6 +249,16 @@ const generateReport = () => {
   if (confiscate.length)
     reportSections.push(`🔹 ตรวจยึดยานพาหนะ :\n  ${confiscate.join("\n  ")}`);
 
+  let riskdna = [];
+  if (formData.value.riskProfileCount)
+    riskdna.push(`- บุคคลกลุ่มเสี่ยง ${formData.value.riskProfileCount} ราย`);
+  if (formData.value.dnaCollectionCount)
+    riskdna.push(`- จัดเก็บ DNA ${formData.value.dnaCollectionCount} ราย`);
+  if (formData.value.fingerprintCount)
+    riskdna.push(`- พิมพ์ลายนิ้วมือ ${formData.value.fingerprintCount} ราย`);
+  if (riskdna.length)
+    reportSections.push(`🔹 จัดทำประวัติบุคคล :\n  ${riskdna.join("\n  ")}`);
+
   let arrests = [];
   if (formData.value.drugArrestCount)
     arrests.push(`- พ.ร.บ.ยาเสพติด ${formData.value.drugArrestCount} ราย`);
@@ -282,10 +294,21 @@ const copyReport = () => {
 <template>
   <div class="min-h-screen bg-base-200 flex flex-col">
     <div class="container mx-auto px-4 py-8">
-      <button @click="goBack" class="btn btn-secondary mb-4">
-        กลับไปเลือกสายงาน
-      </button>
-      <div class="bg-base-100 shadow-lg rounded-lg p-6">
+      <div class="flex justify-between items-center">
+        <button @click="goBack" class="btn btn-secondary mb-4">
+          กลับไปเลือกสายงาน
+        </button>
+        <!-- ปุ่ม Show เพื่อแสดงฟอร์มอีกครั้ง -->
+        <button
+          v-if="!showForm"
+          @click="showForm = true"
+          class="btn btn-primary mb-4"
+        >
+          แก้ไขข้อมูล
+        </button>
+      </div>
+
+      <div v-if="showForm" class="bg-base-100 shadow-lg rounded-lg p-6">
         <h2 class="text-xl font-semibold mb-4">แบบฟอร์มงานป้องกันปราบปราม</h2>
 
         <!-- เพิ่มฟอร์มงานป้องกันปราบปรามที่นี่ -->
@@ -345,9 +368,11 @@ const copyReport = () => {
           </div>
 
           <!-- สิ่งที่ทำ (เลือกได้หลายรายการ) -->
-          <div>
+          <div class="bg-neutral-content p-4 rounded-lg hover:shadow-lg">
             <label class="label">
-              <span class="label-text">สิ่งที่ทำ (เลือกได้หลายรายการ)</span>
+              <span class="label-text mb-1"
+                >สิ่งที่ทำ (เลือกได้หลายรายการ)</span
+              >
             </label>
             <div class="mt-2 space-y-2">
               <!-- Checkbox สำหรับรายการที่กำหนดไว้ -->
@@ -385,7 +410,7 @@ const copyReport = () => {
           </div>
 
           <!-- จำนวนครั้งของผลการปฏิบัติ ตรวจรสถานที่-->
-          <div>
+          <div class="bg-neutral-content p-4 rounded-lg hover:shadow-lg">
             <label class="label">
               <span class="label-text mb-1"
                 >ตรวจเยี่ยมสถานที่ ธนาคาร ร้านทอง ฯ</span
@@ -459,7 +484,7 @@ const copyReport = () => {
           </div>
 
           <!-- POP UP ถนนสายหลัก -->
-          <div>
+          <div class="bg-neutral-content p-4 rounded-lg hover:shadow-lg">
             <label class="label">
               <span class="label-text mb-1"
                 >การรตั้งจุดตรวจ POP UP ถนนสายหลัก</span
@@ -491,7 +516,7 @@ const copyReport = () => {
           </div>
 
           <!-- POP UP ถนนสายรอง -->
-          <div>
+          <div class="bg-neutral-content p-4 rounded-lg hover:shadow-lg">
             <label class="label">
               <span class="label-text mb-1"
                 >การรตั้งจุดตรวจ POP UP ถนนสายรอง</span
@@ -523,7 +548,7 @@ const copyReport = () => {
           </div>
 
           <!-- ผลการปฏิบัติ Line bot -->
-          <div>
+          <div class="bg-neutral-content p-4 rounded-lg hover:shadow-lg">
             <label class="label">
               <span class="label-text mb-1">ผลการปฏิบัติ Line bot</span>
             </label>
@@ -563,7 +588,7 @@ const copyReport = () => {
           </div>
 
           <!-- มาตรการป้องกันปราบปรามการแข่งรถในทาง -->
-          <div>
+          <div class="bg-neutral-content p-4 rounded-lg hover:shadow-lg">
             <label class="label">
               <span class="label-text mb-1"
                 >มาตรการป้องกันปราบปรามการแข่งรถในทาง</span
@@ -635,7 +660,7 @@ const copyReport = () => {
           </div>
 
           <!-- ตรวจยึดยานพาหนะ ตรวจสอบ -->
-          <div>
+          <div class="bg-neutral-content p-4 rounded-lg hover:shadow-lg">
             <label class="label">
               <span class="label-text mb-1">ตรวจยึดยานพาหนะ ตรวจสอบ</span>
             </label>
@@ -665,7 +690,7 @@ const copyReport = () => {
           </div>
 
           <!-- ทำประวัติกลุ่มเสี่ยง / จัดเก็บ DNA / พิมพ์มือ -->
-          <div>
+          <div class="bg-neutral-content p-4 rounded-lg hover:shadow-lg">
             <label class="label">
               <span class="label-text mb-1"
                 >ทำประวัติกลุ่มเสี่ยง / จัดเก็บ DNA / พิมพ์มือ</span
@@ -709,7 +734,7 @@ const copyReport = () => {
           </div>
 
           <!-- ผลการจับกุมข้อหาต่าง ๆ -->
-          <div>
+          <div class="bg-neutral-content p-4 rounded-lg hover:shadow-lg">
             <label class="label">
               <span class="label-text mb-1">ผลการจับกุมข้อหาต่าง ๆ</span>
             </label>
@@ -779,9 +804,14 @@ const copyReport = () => {
           </div>
 
           <!-- ปุ่มส่งฟอร์ม -->
-          <button type="submit" class="btn btn-primary w-full">
-            สร้างรายงาน
-          </button>
+          <div class="flex justify-between items-center">
+            <button type="submit" class="btn btn-primary w-32">
+              บันทึกข้อมูล
+            </button>
+            <button type="submit" class="btn btn-secondary w-32">
+              สร้างรายงาน
+            </button>
+          </div>
         </form>
       </div>
 
@@ -795,7 +825,7 @@ const copyReport = () => {
         </div>
         <textarea
           v-model="report"
-          class="textarea textarea-bordered w-full h-64"
+          class="textarea textarea-bordered w-full h-96"
         ></textarea>
         <button @click="copyReport" class="btn btn-info w-full mt-4">
           คัดลอกข้อความ
