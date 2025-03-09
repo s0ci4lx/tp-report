@@ -15,7 +15,7 @@ const goBack = () => {
   router.push({ name: "home" });
 };
 
-const showForm = ref(true); // ตัวแปรควบคุมการแสดงผลของฟอร์ม
+const showFormAction = ref(false); // ตัวแปรควบคุมการแสดงผลของฟอร์ม
 
 const formData = ref({
   dateTime: dayjs().format("YYYY-MM-DDTHH:mm"), // วันที่และเวลาปัจจุบัน
@@ -152,137 +152,153 @@ const generateReport = () => {
     "D MMMM BB เวลา HH:mm น."
   );
 
-  showForm.value = false;
   let reportSections = [];
 
-  reportSections.push(`เรียน ผู้บังคับบัญชา
+  if (!showFormAction.value) {
+    reportSections.push(`เรียน ผู้บังคับบัญชา
  สภ.เทพา วันที่ ${formattedDate}
-ภายใต้การอำนวยการของ 
+ภายใต้การอำนวยการของ
  พ.ต.อ.เฉลิมชัย เพชรกาศ ผกก.สภ.เทพา
 มอบหมายให้
  พ.ต.ท.สุรเดช เส็นยีหีม รอง ผกก.ป.สภ.เทพา , พ.ต.ท.พิสิทธิ์ โรจชะยะ สวป.สภ.เทพา , พ.ต.ท.วิสันต์ ดิสถาพร สวป.สภ.เทพา
 สั่งการให้
  ${formData.value.teamLeader} พร้อม ${formData.value.teamName}
 ว.4 ${formData.value.actions.join(", ")}
+ เหตุการณ์ปกติ
+จึงเรียนมาเพื่อโปรดทราบ`);
+    report.value = reportSections.join("\n\n");
+  } else {
+    reportSections.push(`เรียน ผู้บังคับบัญชา
+   สภ.เทพา วันที่ ${formattedDate}
+  ภายใต้การอำนวยการของ
+   พ.ต.อ.เฉลิมชัย เพชรกาศ ผกก.สภ.เทพา
+  มอบหมายให้
+   พ.ต.ท.สุรเดช เส็นยีหีม รอง ผกก.ป.สภ.เทพา , พ.ต.ท.พิสิทธิ์ โรจชะยะ สวป.สภ.เทพา , พ.ต.ท.วิสันต์ ดิสถาพร สวป.สภ.เทพา
+  สั่งการให้
+   ${formData.value.teamLeader} พร้อม ${formData.value.teamName}
+  ว.4 ${formData.value.actions.join(", ")}
 
-ผลการปฏิบัติ ดังนี้`);
-  let riskCheck = [];
-  if (formData.value.gasStationCount)
-    riskCheck.push(`- ปั้มน้ำมัน ${formData.value.gasStationCount} ครั้ง`);
-  if (formData.value.bankCount)
-    riskCheck.push(`- ธนาคาร ${formData.value.bankCount} ครั้ง`);
-  if (formData.value.goldShopCount)
-    riskCheck.push(`- ร้านทอง ${formData.value.goldShopCount} ครั้ง`);
-  if (formData.value.convenienceStoreCount)
-    riskCheck.push(
-      `- ร้านสะดวกซื้อ ${formData.value.convenienceStoreCount} ครั้ง`
-    );
-  if (formData.value.atmCount)
-    riskCheck.push(`- ตู้กดเงินสด ${formData.value.atmCount} ครั้ง`);
-  if (formData.value.riskPointCount)
-    riskCheck.push(
-      `- จุดเสี่ยง/สะพาน/ท่อลอด ฯลฯ ${formData.value.riskPointCount} จุด`
-    );
-  if (riskCheck.length)
-    reportSections.push(`🔹 ตรวจจุดเสี่ยง :\n  ${riskCheck.join("\n  ")}`);
+  ผลการปฏิบัติ ดังนี้`);
+    let riskCheck = [];
+    if (formData.value.gasStationCount)
+      riskCheck.push(`- ปั้มน้ำมัน ${formData.value.gasStationCount} ครั้ง`);
+    if (formData.value.bankCount)
+      riskCheck.push(`- ธนาคาร ${formData.value.bankCount} ครั้ง`);
+    if (formData.value.goldShopCount)
+      riskCheck.push(`- ร้านทอง ${formData.value.goldShopCount} ครั้ง`);
+    if (formData.value.convenienceStoreCount)
+      riskCheck.push(
+        `- ร้านสะดวกซื้อ ${formData.value.convenienceStoreCount} ครั้ง`
+      );
+    if (formData.value.atmCount)
+      riskCheck.push(`- ตู้กดเงินสด ${formData.value.atmCount} ครั้ง`);
+    if (formData.value.riskPointCount)
+      riskCheck.push(
+        `- จุดเสี่ยง/สะพาน/ท่อลอด ฯลฯ ${formData.value.riskPointCount} จุด`
+      );
+    if (riskCheck.length)
+      reportSections.push(`🔹 ตรวจจุดเสี่ยง :\n  ${riskCheck.join("\n  ")}`);
 
-  let popUpMain = [];
-  if (formData.value.mainRoadCarCount)
-    popUpMain.push(`- รถยนต์ ${formData.value.mainRoadCarCount} คัน`);
-  if (formData.value.mainRoadMotorcycleCount)
-    popUpMain.push(`- รถ จยย. ${formData.value.mainRoadMotorcycleCount} คัน`);
-  if (popUpMain.length)
-    reportSections.push(`🔹 Pop up สายหลัก :\n  ${popUpMain.join("\n  ")}`);
+    let popUpMain = [];
+    if (formData.value.mainRoadCarCount)
+      popUpMain.push(`- รถยนต์ ${formData.value.mainRoadCarCount} คัน`);
+    if (formData.value.mainRoadMotorcycleCount)
+      popUpMain.push(`- รถ จยย. ${formData.value.mainRoadMotorcycleCount} คัน`);
+    if (popUpMain.length)
+      reportSections.push(`🔹 Pop up สายหลัก :\n  ${popUpMain.join("\n  ")}`);
 
-  let popUpSide = [];
-  if (formData.value.sideRoadCarCount)
-    popUpSide.push(`- รถยนต์ ${formData.value.sideRoadCarCount} คัน`);
-  if (formData.value.sideRoadMotorcycleCount)
-    popUpSide.push(`- รถ จยย. ${formData.value.sideRoadMotorcycleCount} คัน`);
-  if (popUpSide.length)
-    reportSections.push(`🔹 Pop up สายรอง :\n  ${popUpSide.join("\n  ")}`);
+    let popUpSide = [];
+    if (formData.value.sideRoadCarCount)
+      popUpSide.push(`- รถยนต์ ${formData.value.sideRoadCarCount} คัน`);
+    if (formData.value.sideRoadMotorcycleCount)
+      popUpSide.push(`- รถ จยย. ${formData.value.sideRoadMotorcycleCount} คัน`);
+    if (popUpSide.length)
+      reportSections.push(`🔹 Pop up สายรอง :\n  ${popUpSide.join("\n  ")}`);
 
-  // ตรวจสอบ Line bot
-  let lineBotCheck = [];
-  if (formData.value.lineBotCarCount)
-    lineBotCheck.push(`- รถยนต์ ${formData.value.lineBotCarCount} คัน`);
-  if (formData.value.lineBotMotorcycleCount)
-    lineBotCheck.push(`- จยย. ${formData.value.lineBotMotorcycleCount} ค้น`);
-  if (formData.value.lineBotPersonCount)
-    lineBotCheck.push(`- บุคคล ${formData.value.lineBotPersonCount} คน`);
-  if (lineBotCheck.length)
-    reportSections.push(
-      `🔹 ตรวจสอบยานพาหนะ/บุคคล Line bot :\n  ${lineBotCheck.join("\n  ")}`
-    );
+    // ตรวจสอบ Line bot
+    let lineBotCheck = [];
+    if (formData.value.lineBotCarCount)
+      lineBotCheck.push(`- รถยนต์ ${formData.value.lineBotCarCount} คัน`);
+    if (formData.value.lineBotMotorcycleCount)
+      lineBotCheck.push(`- จยย. ${formData.value.lineBotMotorcycleCount} ค้น`);
+    if (formData.value.lineBotPersonCount)
+      lineBotCheck.push(`- บุคคล ${formData.value.lineBotPersonCount} คน`);
+    if (lineBotCheck.length)
+      reportSections.push(
+        `🔹 ตรวจสอบยานพาหนะ/บุคคล Line bot :\n  ${lineBotCheck.join("\n  ")}`
+      );
 
-  let racing = [];
-  if (formData.value.racingSignalCount)
-    racing.push(
-      `- เปิดสัญญาณไฟ/ลว.เส้นทาง ${formData.value.racingSignalCount} จุด`
-    );
-  if (formData.value.racingRepairShopCount)
-    racing.push(
-      `- ตรวจร้านซ่อมรถ/ขายอะไหล่ ${formData.value.racingRepairShopCount} ครั้ง`
-    );
-  if (formData.value.racingRiskProfileCount)
-    racing.push(
-      `- ทำประวัติกลุ่มเสี่ยงแข่งรถ ${formData.value.racingRiskProfileCount} ราย`
-    );
-  if (formData.value.racingConfiscateCount)
-    racing.push(
-      `- ตรวจยึด จยย.แต่งซิ่ง ${formData.value.racingConfiscateCount} คัน`
-    );
-  if (formData.value.racingWarningCount)
-    racing.push(
-      `- แจ้งเตือนรถยนต์เฝ้าระวังพิเศษ ${formData.value.racingWarningCount} คัน`
-    );
-  if (racing.length)
-    reportSections.push(`🔹 มาตรการแข่งรถในทาง :\n  ${racing.join("\n  ")}`);
+    let racing = [];
+    if (formData.value.racingSignalCount)
+      racing.push(
+        `- เปิดสัญญาณไฟ/ลว.เส้นทาง ${formData.value.racingSignalCount} จุด`
+      );
+    if (formData.value.racingRepairShopCount)
+      racing.push(
+        `- ตรวจร้านซ่อมรถ/ขายอะไหล่ ${formData.value.racingRepairShopCount} ครั้ง`
+      );
+    if (formData.value.racingRiskProfileCount)
+      racing.push(
+        `- ทำประวัติกลุ่มเสี่ยงแข่งรถ ${formData.value.racingRiskProfileCount} ราย`
+      );
+    if (formData.value.racingConfiscateCount)
+      racing.push(
+        `- ตรวจยึด จยย.แต่งซิ่ง ${formData.value.racingConfiscateCount} คัน`
+      );
+    if (formData.value.racingWarningCount)
+      racing.push(
+        `- แจ้งเตือนรถยนต์เฝ้าระวังพิเศษ ${formData.value.racingWarningCount} คัน`
+      );
+    if (racing.length)
+      reportSections.push(`🔹 มาตรการแข่งรถในทาง :\n  ${racing.join("\n  ")}`);
 
-  let confiscate = [];
-  if (formData.value.confiscateCarCount)
-    confiscate.push(`- รถยนต์ ${formData.value.confiscateCarCount} คัน`);
-  if (formData.value.confiscateMotorcycleCount)
-    confiscate.push(
-      `- รถ จยย. ${formData.value.confiscateMotorcycleCount} คัน`
-    );
-  if (confiscate.length)
-    reportSections.push(`🔹 ตรวจยึดยานพาหนะ :\n  ${confiscate.join("\n  ")}`);
+    let confiscate = [];
+    if (formData.value.confiscateCarCount)
+      confiscate.push(`- รถยนต์ ${formData.value.confiscateCarCount} คัน`);
+    if (formData.value.confiscateMotorcycleCount)
+      confiscate.push(
+        `- รถ จยย. ${formData.value.confiscateMotorcycleCount} คัน`
+      );
+    if (confiscate.length)
+      reportSections.push(`🔹 ตรวจยึดยานพาหนะ :\n  ${confiscate.join("\n  ")}`);
 
-  let riskdna = [];
-  if (formData.value.riskProfileCount)
-    riskdna.push(`- บุคคลกลุ่มเสี่ยง ${formData.value.riskProfileCount} ราย`);
-  if (formData.value.dnaCollectionCount)
-    riskdna.push(`- จัดเก็บ DNA ${formData.value.dnaCollectionCount} ราย`);
-  if (formData.value.fingerprintCount)
-    riskdna.push(`- พิมพ์ลายนิ้วมือ ${formData.value.fingerprintCount} ราย`);
-  if (riskdna.length)
-    reportSections.push(`🔹 จัดทำประวัติบุคคล :\n  ${riskdna.join("\n  ")}`);
+    let riskdna = [];
+    if (formData.value.riskProfileCount)
+      riskdna.push(`- บุคคลกลุ่มเสี่ยง ${formData.value.riskProfileCount} ราย`);
+    if (formData.value.dnaCollectionCount)
+      riskdna.push(`- จัดเก็บ DNA ${formData.value.dnaCollectionCount} ราย`);
+    if (formData.value.fingerprintCount)
+      riskdna.push(`- พิมพ์ลายนิ้วมือ ${formData.value.fingerprintCount} ราย`);
+    if (riskdna.length)
+      reportSections.push(`🔹 จัดทำประวัติบุคคล :\n  ${riskdna.join("\n  ")}`);
 
-  let arrests = [];
-  if (formData.value.drugArrestCount)
-    arrests.push(`- พ.ร.บ.ยาเสพติด ${formData.value.drugArrestCount} ราย`);
-  if (formData.value.gunArrestCount)
-    arrests.push(`- พ.ร.บ.อาวุธปืน ${formData.value.gunArrestCount} ราย`);
-  if (formData.value.gamblingArrestCount)
-    arrests.push(`- พ.ร.บ.การพนัน ${formData.value.gamblingArrestCount} ราย`);
-  if (formData.value.otherArrestCount)
-    arrests.push(`- ข้อหาอื่น ๆ ${formData.value.otherArrestCount} ราย`);
-  if (formData.value.localWarrantCount)
-    arrests.push(`- หมายจับ สภ.เทพา ${formData.value.localWarrantCount} หมาย`);
-  if (formData.value.otherWarrantCount)
-    arrests.push(`- หมายจับอื่น ๆ ${formData.value.otherWarrantCount} หมาย`);
-  if (arrests.length)
-    reportSections.push(`🔹 ผลการจับกุม :\n  ${arrests.join("\n  ")}`);
+    let arrests = [];
+    if (formData.value.drugArrestCount)
+      arrests.push(`- พ.ร.บ.ยาเสพติด ${formData.value.drugArrestCount} ราย`);
+    if (formData.value.gunArrestCount)
+      arrests.push(`- พ.ร.บ.อาวุธปืน ${formData.value.gunArrestCount} ราย`);
+    if (formData.value.gamblingArrestCount)
+      arrests.push(`- พ.ร.บ.การพนัน ${formData.value.gamblingArrestCount} ราย`);
+    if (formData.value.otherArrestCount)
+      arrests.push(`- ข้อหาอื่น ๆ ${formData.value.otherArrestCount} ราย`);
+    if (formData.value.localWarrantCount)
+      arrests.push(
+        `- หมายจับ สภ.เทพา ${formData.value.localWarrantCount} หมาย`
+      );
+    if (formData.value.otherWarrantCount)
+      arrests.push(`- หมายจับอื่น ๆ ${formData.value.otherWarrantCount} หมาย`);
+    if (arrests.length)
+      reportSections.push(`🔹 ผลการจับกุม :\n  ${arrests.join("\n  ")}`);
 
-  // เงื่อนไขตัด "ไม่พบสิ่งผิดกฎหมายแต่อย่างใด" ออก หากมีผลการจับกุม
-  if (!arrests.length) {
-    reportSections.push(`ไม่พบสิ่งผิดกฎหมายแต่อย่างใด`);
+    // เงื่อนไขตัด "ไม่พบสิ่งผิดกฎหมายแต่อย่างใด" ออก หากมีผลการจับกุม
+    if (!arrests.length) {
+      reportSections.push(`ไม่พบสิ่งผิดกฎหมายแต่อย่างใด`);
+    }
+
+    reportSections.push(`จึงเรียนมาเพื่อโปรดทราบ`);
+
+    report.value = reportSections.join("\n\n");
   }
-
-  reportSections.push(`จึงเรียนมาเพื่อโปรดทราบ`);
-
-  report.value = reportSections.join("\n\n");
 };
 
 const copyReport = () => {
@@ -294,25 +310,15 @@ const copyReport = () => {
 <template>
   <div class="min-h-screen bg-base-200 flex flex-col">
     <div class="container mx-auto px-4 py-8">
-      <div class="flex justify-between items-center">
-        <button @click="goBack" class="btn btn-secondary mb-4">
-          กลับไปเลือกสายงาน
-        </button>
-        <!-- ปุ่ม Show เพื่อแสดงฟอร์มอีกครั้ง -->
-        <button
-          v-if="!showForm"
-          @click="showForm = true"
-          class="btn btn-accent mb-4"
-        >
-          แก้ไขข้อมูล
-        </button>
-      </div>
+      <button @click="goBack" class="btn btn-secondary mb-4">
+        กลับไปเลือกสายงาน
+      </button>
 
-      <div v-if="showForm" class="bg-base-100 shadow-lg rounded-lg p-6">
+      <div class="bg-base-100 shadow-lg rounded-lg p-6">
         <h2 class="text-xl font-semibold mb-4">แบบฟอร์มงานป้องกันปราบปราม</h2>
 
         <!-- เพิ่มฟอร์มงานป้องกันปราบปรามที่นี่ -->
-        <form @submit.prevent="generateReport" class="space-y-6">
+        <form @submit.prevent="generateReport" class="space-y-4">
           <!-- ฟิลด์เฉพาะงานป้องกันปราบปราม -->
           <div>
             <label class="input w-full">
@@ -412,441 +418,472 @@ const copyReport = () => {
             </div>
           </div>
 
-          <!-- จำนวนครั้งของผลการปฏิบัติ ตรวจรสถานที่-->
-          <div class="bg-neutral-content p-4 rounded-lg hover:shadow-lg">
-            <label class="label">
-              <span class="label-text mb-1"
-                >🔴 ตรวจเยี่ยมสถานที่ ธนาคาร ร้านทอง ฯ</span
-              >
-            </label>
+          <div>
+            <button
+              v-show="!showFormAction"
+              @click="showFormAction = true"
+              class="btn btn-accent"
+            >
+              เพิ่มผลการปฏิบัติ
+            </button>
 
-            <div class="grid grid-cols-2 grid-rows-3 gap-4">
-              <div>
-                <label class="input w-full">
-                  <span class="label text-black">ปั้มน้ำมัน</span>
-                  <input
-                    type="number"
-                    v-model="formData.gasStationCount"
-                    class="input input-bordered"
-                    :class="{ 'bg-green-50': formData.gasStationCount > 0 }"
-                  />
-                </label>
+            <button
+              v-show="showFormAction"
+              @click="showFormAction = false"
+              class="btn btn-accent"
+            >
+              ไม่มีผลการปฏิบัติ
+            </button>
+          </div>
+
+          <div v-if="showFormAction" class="space-y-4">
+            <!-- จำนวนครั้งของผลการปฏิบัติ ตรวจรสถานที่-->
+            <div class="bg-neutral-content p-4 rounded-lg hover:shadow-lg">
+              <label class="label">
+                <span class="label-text mb-1"
+                  >🔴 ตรวจเยี่ยมสถานที่ ธนาคาร ร้านทอง ฯ</span
+                >
+              </label>
+
+              <div class="grid grid-cols-2 grid-rows-3 gap-4">
+                <div>
+                  <label class="input w-full">
+                    <span class="label text-black">ปั้มน้ำมัน</span>
+                    <input
+                      type="number"
+                      v-model="formData.gasStationCount"
+                      class="input input-bordered"
+                      :class="{ 'bg-green-50': formData.gasStationCount > 0 }"
+                    />
+                  </label>
+                </div>
+                <div>
+                  <label class="input w-full">
+                    <span class="label text-black">ธนาคาร</span>
+                    <input
+                      type="number"
+                      v-model="formData.bankCount"
+                      class="input input-bordered"
+                      :class="{ 'bg-green-50': formData.bankCount > 0 }"
+                    />
+                  </label>
+                </div>
+                <div>
+                  <label class="input w-full">
+                    <span class="label text-black">ร้านทอง</span>
+                    <input
+                      type="number"
+                      v-model="formData.goldShopCount"
+                      class="input input-bordered"
+                      :class="{ 'bg-green-50': formData.goldShopCount > 0 }"
+                    />
+                  </label>
+                </div>
+                <div>
+                  <label class="input w-full">
+                    <span class="label text-black">ร้านสะดวกซื้อ</span>
+                    <input
+                      type="number"
+                      v-model="formData.convenienceStoreCount"
+                      class="input input-bordered"
+                      :class="{
+                        'bg-green-50': formData.convenienceStoreCount > 0,
+                      }"
+                    />
+                  </label>
+                </div>
+                <div>
+                  <label class="input w-full">
+                    <span class="label text-black">ตู้กดเงินสด ATM</span>
+                    <input
+                      type="number"
+                      v-model="formData.atmCount"
+                      class="input input-bordered"
+                      :class="{ 'bg-green-50': formData.atmCount > 0 }"
+                    />
+                  </label>
+                </div>
+                <div>
+                  <label class="input w-full">
+                    <span class="label text-black"
+                      >จุดเสี่ยง / สะพาน / ท่อลอด</span
+                    >
+                    <input
+                      type="number"
+                      v-model="formData.riskPointCount"
+                      class="input input-bordered"
+                      :class="{ 'bg-green-50': formData.riskPointCount > 0 }"
+                    />
+                  </label>
+                </div>
               </div>
-              <div>
-                <label class="input w-full">
-                  <span class="label text-black">ธนาคาร</span>
-                  <input
-                    type="number"
-                    v-model="formData.bankCount"
-                    class="input input-bordered"
-                    :class="{ 'bg-green-50': formData.bankCount > 0 }"
-                  />
-                </label>
+            </div>
+
+            <!-- POP UP ถนนสายหลัก -->
+            <div class="bg-neutral-content p-4 rounded-lg hover:shadow-lg">
+              <label class="label">
+                <span class="label-text mb-1"
+                  >🔴 การรตั้งจุดตรวจ POP UP ถนนสายหลัก</span
+                >
+              </label>
+
+              <div class="grid grid-cols-2 grid-rows-1 gap-4">
+                <div>
+                  <label class="input w-full">
+                    <span class="label text-black">รถยนต์</span>
+                    <input
+                      type="number"
+                      v-model="formData.mainRoadCarCount"
+                      class="input input-bordered"
+                      :class="{ 'bg-green-50': formData.mainRoadCarCount > 0 }"
+                    />
+                  </label>
+                </div>
+                <div>
+                  <label class="input w-full">
+                    <span class="label text-black">รถ จยย.</span>
+                    <input
+                      type="number"
+                      v-model="formData.mainRoadMotorcycleCount"
+                      class="input input-bordered"
+                      :class="{
+                        'bg-green-50': formData.mainRoadMotorcycleCount > 0,
+                      }"
+                    />
+                  </label>
+                </div>
               </div>
-              <div>
-                <label class="input w-full">
-                  <span class="label text-black">ร้านทอง</span>
-                  <input
-                    type="number"
-                    v-model="formData.goldShopCount"
-                    class="input input-bordered"
-                    :class="{ 'bg-green-50': formData.goldShopCount > 0 }"
-                  />
-                </label>
+            </div>
+
+            <!-- POP UP ถนนสายรอง -->
+            <div class="bg-neutral-content p-4 rounded-lg hover:shadow-lg">
+              <label class="label">
+                <span class="label-text mb-1"
+                  >🔴 การรตั้งจุดตรวจ POP UP ถนนสายรอง</span
+                >
+              </label>
+
+              <div class="grid grid-cols-2 grid-rows-1 gap-4">
+                <div>
+                  <label class="input w-full">
+                    <span class="label text-black">รถยนต์</span>
+                    <input
+                      type="number"
+                      v-model="formData.sideRoadCarCount"
+                      class="input input-bordered"
+                      :class="{ 'bg-green-50': formData.sideRoadCarCount > 0 }"
+                    />
+                  </label>
+                </div>
+                <div>
+                  <label class="input w-full">
+                    <span class="label text-black">รถ จยย.</span>
+                    <input
+                      type="number"
+                      v-model="formData.sideRoadMotorcycleCount"
+                      class="input input-bordered"
+                      :class="{
+                        'bg-green-50': formData.sideRoadMotorcycleCount > 0,
+                      }"
+                    />
+                  </label>
+                </div>
               </div>
-              <div>
-                <label class="input w-full">
-                  <span class="label text-black">ร้านสะดวกซื้อ</span>
-                  <input
-                    type="number"
-                    v-model="formData.convenienceStoreCount"
-                    class="input input-bordered"
-                    :class="{
-                      'bg-green-50': formData.convenienceStoreCount > 0,
-                    }"
-                  />
-                </label>
+            </div>
+
+            <!-- ผลการปฏิบัติ Line bot -->
+            <div class="bg-neutral-content p-4 rounded-lg hover:shadow-lg">
+              <label class="label">
+                <span class="label-text mb-1">🔴 ผลการปฏิบัติ Line bot</span>
+              </label>
+
+              <div class="grid grid-cols-2 grid-rows-2 gap-4">
+                <div>
+                  <label class="input w-full">
+                    <span class="label text-black">รถยนต์</span>
+                    <input
+                      type="number"
+                      v-model="formData.lineBotCarCount"
+                      class="input input-bordered"
+                      :class="{ 'bg-green-50': formData.lineBotCarCount > 0 }"
+                    />
+                  </label>
+                </div>
+                <div>
+                  <label class="input w-full">
+                    <span class="label text-black">จยย.</span>
+                    <input
+                      type="number"
+                      v-model="formData.lineBotMotorcycleCount"
+                      class="input input-bordered"
+                      :class="{
+                        'bg-green-50': formData.lineBotMotorcycleCount > 0,
+                      }"
+                    />
+                  </label>
+                </div>
+                <div>
+                  <label class="input w-full">
+                    <span class="label text-black">บุคคล</span>
+                    <input
+                      type="number"
+                      v-model="formData.lineBotPersonCount"
+                      class="input input-bordered"
+                      :class="{
+                        'bg-green-50': formData.lineBotPersonCount > 0,
+                      }"
+                    />
+                  </label>
+                </div>
               </div>
-              <div>
-                <label class="input w-full">
-                  <span class="label text-black">ตู้กดเงินสด ATM</span>
-                  <input
-                    type="number"
-                    v-model="formData.atmCount"
-                    class="input input-bordered"
-                    :class="{ 'bg-green-50': formData.atmCount > 0 }"
-                  />
-                </label>
+            </div>
+
+            <!-- มาตรการป้องกันปราบปรามการแข่งรถในทาง -->
+            <div class="bg-neutral-content p-4 rounded-lg hover:shadow-lg">
+              <label class="label">
+                <span class="label-text mb-1"
+                  >🔴 มาตรการป้องกันปราบปรามการแข่งรถในทาง</span
+                >
+              </label>
+
+              <div class="grid grid-cols-1 grid-rows-5 gap-4">
+                <div>
+                  <label class="input w-full">
+                    <span class="label text-black"
+                      >ลว.เส้นทางตรวจสอบกลุ่มรถซิ่ง</span
+                    >
+                    <input
+                      type="number"
+                      v-model="formData.racingSignalCount"
+                      class="input input-bordered"
+                      :class="{ 'bg-green-50': formData.racingSignalCount > 0 }"
+                    />
+                  </label>
+                </div>
+                <div>
+                  <label class="input w-full">
+                    <span class="label text-black"
+                      >ตรวจร้านซ่อมรถ/ขายอะไหล่</span
+                    >
+                    <input
+                      type="number"
+                      v-model="formData.racingRepairShopCount"
+                      class="input input-bordered"
+                      :class="{
+                        'bg-green-50': formData.racingRepairShopCount > 0,
+                      }"
+                    />
+                  </label>
+                </div>
+                <div>
+                  <label class="input w-full">
+                    <span class="label text-black"
+                      >จัดทำประวัติบุคคลกลุ่มเสี่ยงแข่งรถ ฯ</span
+                    >
+                    <input
+                      type="number"
+                      v-model="formData.racingRiskProfileCount"
+                      class="input input-bordered"
+                      :class="{
+                        'bg-green-50': formData.racingRiskProfileCount > 0,
+                      }"
+                    />
+                  </label>
+                </div>
+                <div>
+                  <label class="input w-full">
+                    <span class="label text-black">ตรวจยึด จยย. แต่งซิ่ง</span>
+                    <input
+                      type="number"
+                      v-model="formData.racingConfiscateCount"
+                      class="input input-bordered"
+                      :class="{
+                        'bg-green-50': formData.racingConfiscateCount > 0,
+                      }"
+                    />
+                  </label>
+                </div>
+                <div>
+                  <label class="input w-full">
+                    <span class="label text-black"
+                      >แจ้งเตือนรถยนต์เฝ้าระวังสูงสุด</span
+                    >
+                    <input
+                      type="number"
+                      v-model="formData.racingWarningCount"
+                      class="input input-bordered"
+                      :class="{
+                        'bg-green-50': formData.racingWarningCount > 0,
+                      }"
+                    />
+                  </label>
+                </div>
               </div>
-              <div>
-                <label class="input w-full">
-                  <span class="label text-black"
-                    >จุดเสี่ยง / สะพาน / ท่อลอด</span
-                  >
-                  <input
-                    type="number"
-                    v-model="formData.riskPointCount"
-                    class="input input-bordered"
-                    :class="{ 'bg-green-50': formData.riskPointCount > 0 }"
-                  />
-                </label>
+            </div>
+
+            <!-- ตรวจยึดยานพาหนะ ตรวจสอบ -->
+            <div class="bg-neutral-content p-4 rounded-lg hover:shadow-lg">
+              <label class="label">
+                <span class="label-text mb-1">🔴 ตรวจยึดยานพาหนะ ตรวจสอบ</span>
+              </label>
+
+              <div class="grid grid-cols-2 grid-rows-1 gap-4">
+                <div>
+                  <label class="input w-full">
+                    <span class="label text-black">รถยนต์</span>
+                    <input
+                      type="number"
+                      v-model="formData.confiscateCarCount"
+                      class="input input-bordered"
+                      :class="{
+                        'bg-green-50': formData.confiscateCarCount > 0,
+                      }"
+                    />
+                  </label>
+                </div>
+                <div>
+                  <label class="input w-full">
+                    <span class="label text-black">จยย.</span>
+                    <input
+                      type="number"
+                      v-model="formData.confiscateMotorcycleCount"
+                      class="input input-bordered"
+                      :class="{
+                        'bg-green-50': formData.confiscateMotorcycleCount > 0,
+                      }"
+                    />
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- ทำประวัติกลุ่มเสี่ยง / จัดเก็บ DNA / พิมพ์มือ -->
+            <div class="bg-neutral-content p-4 rounded-lg hover:shadow-lg">
+              <label class="label">
+                <span class="label-text mb-1"
+                  >🔴 ทำประวัติกลุ่มเสี่ยง / จัดเก็บ DNA / พิมพ์มือ</span
+                >
+              </label>
+
+              <div class="grid grid-cols-1 grid-rows-3 gap-4">
+                <div>
+                  <label class="input w-full">
+                    <span class="label text-black"
+                      >ทำประวัติบุคคลกลุ่มเสี่ยง</span
+                    >
+                    <input
+                      type="number"
+                      v-model="formData.riskProfileCount"
+                      class="input input-bordered"
+                      :class="{ 'bg-green-50': formData.riskProfileCount > 0 }"
+                    />
+                  </label>
+                </div>
+                <div>
+                  <label class="input w-full">
+                    <span class="label text-black">จัดเก็บ DNA</span>
+                    <input
+                      type="number"
+                      v-model="formData.dnaCollectionCount"
+                      class="input input-bordered"
+                      :class="{
+                        'bg-green-50': formData.dnaCollectionCount > 0,
+                      }"
+                    />
+                  </label>
+                </div>
+                <div>
+                  <label class="input w-full">
+                    <span class="label text-black">พิมพ์ลายนิ้วมือ</span>
+                    <input
+                      type="number"
+                      v-model="formData.fingerprintCount"
+                      class="input input-bordered"
+                      :class="{ 'bg-green-50': formData.fingerprintCount > 0 }"
+                    />
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- ผลการจับกุมข้อหาต่าง ๆ -->
+            <div class="bg-neutral-content p-4 rounded-lg hover:shadow-lg">
+              <label class="label">
+                <span class="label-text mb-1">🔴 ผลการจับกุมข้อหาต่าง ๆ</span>
+              </label>
+
+              <div class="grid grid-cols-2 grid-rows-3 gap-4">
+                <div>
+                  <label class="input w-full">
+                    <span class="label text-black">พ.ร.บ.ยาเสพติด</span>
+                    <input
+                      type="number"
+                      v-model="formData.drugArrestCount"
+                      class="input input-bordered"
+                      :class="{ 'bg-green-50': formData.drugArrestCount > 0 }"
+                    />
+                  </label>
+                </div>
+                <div>
+                  <label class="input w-full">
+                    <span class="label text-black">พ.ร.บ.อาวุธปืน</span>
+                    <input
+                      type="number"
+                      v-model="formData.gunArrestCount"
+                      class="input input-bordered"
+                      :class="{ 'bg-green-50': formData.gunArrestCount > 0 }"
+                    />
+                  </label>
+                </div>
+                <div>
+                  <label class="input w-full">
+                    <span class="label text-black">พ.ร.บ.การพนัน</span>
+                    <input
+                      type="number"
+                      v-model="formData.gamblingArrestCount"
+                      class="input input-bordered"
+                      :class="{
+                        'bg-green-50': formData.gamblingArrestCount > 0,
+                      }"
+                    />
+                  </label>
+                </div>
+                <div>
+                  <label class="input w-full">
+                    <span class="label text-black">ข้อหาอื่น ๆ</span>
+                    <input
+                      type="number"
+                      v-model="formData.otherArrestCount"
+                      class="input input-bordered"
+                      :class="{ 'bg-green-50': formData.otherArrestCount > 0 }"
+                    />
+                  </label>
+                </div>
+                <div>
+                  <label class="input w-full">
+                    <span class="label text-black">หมายจับ สภ.เทพา</span>
+                    <input
+                      type="number"
+                      v-model="formData.localWarrantCount"
+                      class="input input-bordered"
+                      :class="{ 'bg-green-50': formData.localWarrantCount > 0 }"
+                    />
+                  </label>
+                </div>
+                <div>
+                  <label class="input w-full">
+                    <span class="label text-black">หมายจับอื่น ๆ</span>
+                    <input
+                      type="number"
+                      v-model="formData.otherWarrantCount"
+                      class="input input-bordered"
+                      :class="{ 'bg-green-50': formData.otherWarrantCount > 0 }"
+                    />
+                  </label>
+                </div>
               </div>
             </div>
           </div>
-
-          <!-- POP UP ถนนสายหลัก -->
-          <div class="bg-neutral-content p-4 rounded-lg hover:shadow-lg">
-            <label class="label">
-              <span class="label-text mb-1"
-                >🔴 การรตั้งจุดตรวจ POP UP ถนนสายหลัก</span
-              >
-            </label>
-
-            <div class="grid grid-cols-2 grid-rows-1 gap-4">
-              <div>
-                <label class="input w-full">
-                  <span class="label text-black">รถยนต์</span>
-                  <input
-                    type="number"
-                    v-model="formData.mainRoadCarCount"
-                    class="input input-bordered"
-                    :class="{ 'bg-green-50': formData.mainRoadCarCount > 0 }"
-                  />
-                </label>
-              </div>
-              <div>
-                <label class="input w-full">
-                  <span class="label text-black">รถ จยย.</span>
-                  <input
-                    type="number"
-                    v-model="formData.mainRoadMotorcycleCount"
-                    class="input input-bordered"
-                    :class="{
-                      'bg-green-50': formData.mainRoadMotorcycleCount > 0,
-                    }"
-                  />
-                </label>
-              </div>
-            </div>
-          </div>
-
-          <!-- POP UP ถนนสายรอง -->
-          <div class="bg-neutral-content p-4 rounded-lg hover:shadow-lg">
-            <label class="label">
-              <span class="label-text mb-1"
-                >🔴 การรตั้งจุดตรวจ POP UP ถนนสายรอง</span
-              >
-            </label>
-
-            <div class="grid grid-cols-2 grid-rows-1 gap-4">
-              <div>
-                <label class="input w-full">
-                  <span class="label text-black">รถยนต์</span>
-                  <input
-                    type="number"
-                    v-model="formData.sideRoadCarCount"
-                    class="input input-bordered"
-                    :class="{ 'bg-green-50': formData.sideRoadCarCount > 0 }"
-                  />
-                </label>
-              </div>
-              <div>
-                <label class="input w-full">
-                  <span class="label text-black">รถ จยย.</span>
-                  <input
-                    type="number"
-                    v-model="formData.sideRoadMotorcycleCount"
-                    class="input input-bordered"
-                    :class="{
-                      'bg-green-50': formData.sideRoadMotorcycleCount > 0,
-                    }"
-                  />
-                </label>
-              </div>
-            </div>
-          </div>
-
-          <!-- ผลการปฏิบัติ Line bot -->
-          <div class="bg-neutral-content p-4 rounded-lg hover:shadow-lg">
-            <label class="label">
-              <span class="label-text mb-1">🔴 ผลการปฏิบัติ Line bot</span>
-            </label>
-
-            <div class="grid grid-cols-2 grid-rows-2 gap-4">
-              <div>
-                <label class="input w-full">
-                  <span class="label text-black">รถยนต์</span>
-                  <input
-                    type="number"
-                    v-model="formData.lineBotCarCount"
-                    class="input input-bordered"
-                    :class="{ 'bg-green-50': formData.lineBotCarCount > 0 }"
-                  />
-                </label>
-              </div>
-              <div>
-                <label class="input w-full">
-                  <span class="label text-black">จยย.</span>
-                  <input
-                    type="number"
-                    v-model="formData.lineBotMotorcycleCount"
-                    class="input input-bordered"
-                    :class="{
-                      'bg-green-50': formData.lineBotMotorcycleCount > 0,
-                    }"
-                  />
-                </label>
-              </div>
-              <div>
-                <label class="input w-full">
-                  <span class="label text-black">บุคคล</span>
-                  <input
-                    type="number"
-                    v-model="formData.lineBotPersonCount"
-                    class="input input-bordered"
-                    :class="{ 'bg-green-50': formData.lineBotPersonCount > 0 }"
-                  />
-                </label>
-              </div>
-            </div>
-          </div>
-
-          <!-- มาตรการป้องกันปราบปรามการแข่งรถในทาง -->
-          <div class="bg-neutral-content p-4 rounded-lg hover:shadow-lg">
-            <label class="label">
-              <span class="label-text mb-1"
-                >🔴 มาตรการป้องกันปราบปรามการแข่งรถในทาง</span
-              >
-            </label>
-
-            <div class="grid grid-cols-1 grid-rows-5 gap-4">
-              <div>
-                <label class="input w-full">
-                  <span class="label text-black"
-                    >ลว.เส้นทางตรวจสอบกลุ่มรถซิ่ง</span
-                  >
-                  <input
-                    type="number"
-                    v-model="formData.racingSignalCount"
-                    class="input input-bordered"
-                    :class="{ 'bg-green-50': formData.racingSignalCount > 0 }"
-                  />
-                </label>
-              </div>
-              <div>
-                <label class="input w-full">
-                  <span class="label text-black">ตรวจร้านซ่อมรถ/ขายอะไหล่</span>
-                  <input
-                    type="number"
-                    v-model="formData.racingRepairShopCount"
-                    class="input input-bordered"
-                    :class="{
-                      'bg-green-50': formData.racingRepairShopCount > 0,
-                    }"
-                  />
-                </label>
-              </div>
-              <div>
-                <label class="input w-full">
-                  <span class="label text-black"
-                    >จัดทำประวัติบุคคลกลุ่มเสี่ยงแข่งรถ ฯ</span
-                  >
-                  <input
-                    type="number"
-                    v-model="formData.racingRiskProfileCount"
-                    class="input input-bordered"
-                    :class="{
-                      'bg-green-50': formData.racingRiskProfileCount > 0,
-                    }"
-                  />
-                </label>
-              </div>
-              <div>
-                <label class="input w-full">
-                  <span class="label text-black">ตรวจยึด จยย. แต่งซิ่ง</span>
-                  <input
-                    type="number"
-                    v-model="formData.racingConfiscateCount"
-                    class="input input-bordered"
-                    :class="{
-                      'bg-green-50': formData.racingConfiscateCount > 0,
-                    }"
-                  />
-                </label>
-              </div>
-              <div>
-                <label class="input w-full">
-                  <span class="label text-black"
-                    >แจ้งเตือนรถยนต์เฝ้าระวังสูงสุด</span
-                  >
-                  <input
-                    type="number"
-                    v-model="formData.racingWarningCount"
-                    class="input input-bordered"
-                    :class="{ 'bg-green-50': formData.racingWarningCount > 0 }"
-                  />
-                </label>
-              </div>
-            </div>
-          </div>
-
-          <!-- ตรวจยึดยานพาหนะ ตรวจสอบ -->
-          <div class="bg-neutral-content p-4 rounded-lg hover:shadow-lg">
-            <label class="label">
-              <span class="label-text mb-1">🔴 ตรวจยึดยานพาหนะ ตรวจสอบ</span>
-            </label>
-
-            <div class="grid grid-cols-2 grid-rows-1 gap-4">
-              <div>
-                <label class="input w-full">
-                  <span class="label text-black">รถยนต์</span>
-                  <input
-                    type="number"
-                    v-model="formData.confiscateCarCount"
-                    class="input input-bordered"
-                    :class="{ 'bg-green-50': formData.confiscateCarCount > 0 }"
-                  />
-                </label>
-              </div>
-              <div>
-                <label class="input w-full">
-                  <span class="label text-black">จยย.</span>
-                  <input
-                    type="number"
-                    v-model="formData.confiscateMotorcycleCount"
-                    class="input input-bordered"
-                    :class="{
-                      'bg-green-50': formData.confiscateMotorcycleCount > 0,
-                    }"
-                  />
-                </label>
-              </div>
-            </div>
-          </div>
-
-          <!-- ทำประวัติกลุ่มเสี่ยง / จัดเก็บ DNA / พิมพ์มือ -->
-          <div class="bg-neutral-content p-4 rounded-lg hover:shadow-lg">
-            <label class="label">
-              <span class="label-text mb-1"
-                >🔴 ทำประวัติกลุ่มเสี่ยง / จัดเก็บ DNA / พิมพ์มือ</span
-              >
-            </label>
-
-            <div class="grid grid-cols-1 grid-rows-3 gap-4">
-              <div>
-                <label class="input w-full">
-                  <span class="label text-black"
-                    >ทำประวัติบุคคลกลุ่มเสี่ยง</span
-                  >
-                  <input
-                    type="number"
-                    v-model="formData.riskProfileCount"
-                    class="input input-bordered"
-                    :class="{ 'bg-green-50': formData.riskProfileCount > 0 }"
-                  />
-                </label>
-              </div>
-              <div>
-                <label class="input w-full">
-                  <span class="label text-black">จัดเก็บ DNA</span>
-                  <input
-                    type="number"
-                    v-model="formData.dnaCollectionCount"
-                    class="input input-bordered"
-                    :class="{ 'bg-green-50': formData.dnaCollectionCount > 0 }"
-                  />
-                </label>
-              </div>
-              <div>
-                <label class="input w-full">
-                  <span class="label text-black">พิมพ์ลายนิ้วมือ</span>
-                  <input
-                    type="number"
-                    v-model="formData.fingerprintCount"
-                    class="input input-bordered"
-                    :class="{ 'bg-green-50': formData.fingerprintCount > 0 }"
-                  />
-                </label>
-              </div>
-            </div>
-          </div>
-
-          <!-- ผลการจับกุมข้อหาต่าง ๆ -->
-          <div class="bg-neutral-content p-4 rounded-lg hover:shadow-lg">
-            <label class="label">
-              <span class="label-text mb-1">🔴 ผลการจับกุมข้อหาต่าง ๆ</span>
-            </label>
-
-            <div class="grid grid-cols-2 grid-rows-3 gap-4">
-              <div>
-                <label class="input w-full">
-                  <span class="label text-black">พ.ร.บ.ยาเสพติด</span>
-                  <input
-                    type="number"
-                    v-model="formData.drugArrestCount"
-                    class="input input-bordered"
-                    :class="{ 'bg-green-50': formData.drugArrestCount > 0 }"
-                  />
-                </label>
-              </div>
-              <div>
-                <label class="input w-full">
-                  <span class="label text-black">พ.ร.บ.อาวุธปืน</span>
-                  <input
-                    type="number"
-                    v-model="formData.gunArrestCount"
-                    class="input input-bordered"
-                    :class="{ 'bg-green-50': formData.gunArrestCount > 0 }"
-                  />
-                </label>
-              </div>
-              <div>
-                <label class="input w-full">
-                  <span class="label text-black">พ.ร.บ.การพนัน</span>
-                  <input
-                    type="number"
-                    v-model="formData.gamblingArrestCount"
-                    class="input input-bordered"
-                    :class="{ 'bg-green-50': formData.gamblingArrestCount > 0 }"
-                  />
-                </label>
-              </div>
-              <div>
-                <label class="input w-full">
-                  <span class="label text-black">ข้อหาอื่น ๆ</span>
-                  <input
-                    type="number"
-                    v-model="formData.otherArrestCount"
-                    class="input input-bordered"
-                    :class="{ 'bg-green-50': formData.otherArrestCount > 0 }"
-                  />
-                </label>
-              </div>
-              <div>
-                <label class="input w-full">
-                  <span class="label text-black">หมายจับ สภ.เทพา</span>
-                  <input
-                    type="number"
-                    v-model="formData.localWarrantCount"
-                    class="input input-bordered"
-                    :class="{ 'bg-green-50': formData.localWarrantCount > 0 }"
-                  />
-                </label>
-              </div>
-              <div>
-                <label class="input w-full">
-                  <span class="label text-black">หมายจับอื่น ๆ</span>
-                  <input
-                    type="number"
-                    v-model="formData.otherWarrantCount"
-                    class="input input-bordered"
-                    :class="{ 'bg-green-50': formData.otherWarrantCount > 0 }"
-                  />
-                </label>
-              </div>
-            </div>
-          </div>
-
           <!-- ปุ่มส่งฟอร์ม -->
           <div class="flex justify-between items-center">
             <button type="submit" class="btn btn-primary w-32">
