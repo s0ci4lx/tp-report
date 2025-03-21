@@ -315,6 +315,71 @@ const copyReport = () => {
     alert("คัดลอกข้อความเรียบร้อยแล้ว");
   });
 };
+
+const saveToGoogleSheet = async () => {
+  const url = new URL(
+    "https://script.google.com/macros/s/AKfycbx43b0pCxjMUA_WvmywN_NUn5srlmVb2EXlfL4UiAOAjT3AALEmEMueQmZlDagusGiBbQ/exec"
+  );
+  const params = new URLSearchParams({
+    dateTime: formData.value.dateTime || "",
+    workType: formData.value.workType || "",
+    teamLeader: formData.value.teamLeader || "",
+    teamName: formData.value.teamName || "",
+    actions: formData.value.actions || "",
+    gasStationCount: formData.value.gasStationCount || 0,
+    bankCount: formData.value.bankCount || 0,
+    goldShopCount: formData.value.goldShopCount || 0,
+    convenienceStoreCount: formData.value.convenienceStoreCount || 0,
+    atmCount: formData.value.atmCount || 0,
+    riskPointCount: formData.value.riskPointCount || 0,
+    mainRoadCarCount: formData.value.mainRoadCarCount || 0,
+    mainRoadMotorcycleCount: formData.value.mainRoadMotorcycleCount || 0,
+    sideRoadCarCount: formData.value.sideRoadCarCount || 0,
+    sideRoadMotorcycleCount: formData.value.sideRoadMotorcycleCount || 0,
+    lineBotCarCount: formData.value.lineBotCarCount || 0,
+    lineBotMotorcycleCount: formData.value.lineBotMotorcycleCount || 0,
+    lineBotPersonCount: formData.value.lineBotPersonCount || 0,
+    racingSignalCount: formData.value.racingSignalCount || 0,
+    racingRepairShopCount: formData.value.racingRepairShopCount || 0,
+    racingRiskProfileCount: formData.value.racingRiskProfileCount || 0,
+    racingConfiscateCount: formData.value.racingConfiscateCount || 0,
+    racingWarningCount: formData.value.racingWarningCount || 0,
+    confiscateCarCount: formData.value.confiscateCarCount || 0,
+    confiscateMotorcycleCount: formData.value.confiscateMotorcycleCount || 0,
+    drugArrestCount: formData.value.drugArrestCount || 0,
+    gunArrestCount: formData.value.gunArrestCount || 0,
+    gamblingArrestCount: formData.value.gamblingArrestCount || 0,
+    otherArrestCount: formData.value.otherArrestCount || 0,
+    localWarrantCount: formData.value.localWarrantCount || 0,
+    otherWarrantCount: formData.value.otherWarrantCount || 0,
+  });
+
+  url.search = params.toString();
+
+  try {
+    const response = await fetch(url, { method: "GET" });
+    const text = await response.text(); // อ่าน response เป็น text ก่อน
+    let result;
+
+    try {
+      result = JSON.parse(text); // แปลงเป็น JSON
+    } catch (jsonError) {
+      console.error("JSON Parse Error:", jsonError, "Response Text:", text);
+      alert("เกิดข้อผิดพลาดในการบันทึก: ไม่สามารถแปลงข้อมูล JSON");
+      return;
+    }
+
+    console.log(result);
+    if (result.status === "success") {
+      alert("บันทึกข้อมูลสำเร็จ!");
+    } else {
+      alert("เกิดข้อผิดพลาด: " + result.message);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    alert("เกิดข้อผิดพลาดในการบันทึก");
+  }
+};
 </script>
 <template>
   <div class="min-h-screen bg-base-200 flex flex-col">
@@ -445,7 +510,7 @@ const copyReport = () => {
             </button>
           </div>
 
-          <div v-if="showFormAction" class="space-y-4">
+          <div v-if="showFormAction" class="space-y-3">
             <!-- จำนวนครั้งของผลการปฏิบัติ ตรวจรสถานที่-->
             <div class="bg-neutral-content p-4 rounded-lg hover:shadow-lg">
               <label class="label">
@@ -454,7 +519,7 @@ const copyReport = () => {
                 >
               </label>
 
-              <div class="grid grid-cols-2 grid-rows-3 gap-4">
+              <div class="grid grid-cols-2 grid-rows-3 gap-3">
                 <div>
                   <label class="input w-full">
                     <span class="label text-black">ปั้มน้ำมัน</span>
@@ -514,9 +579,7 @@ const copyReport = () => {
                 </div>
                 <div>
                   <label class="input w-full">
-                    <span class="label text-black"
-                      >จุดเสี่ยง / สะพาน / ท่อลอด</span
-                    >
+                    <span class="label text-black">สะพาน/ท่อลอด</span>
                     <input
                       type="number"
                       v-model="formData.riskPointCount"
@@ -536,7 +599,7 @@ const copyReport = () => {
                 >
               </label>
 
-              <div class="grid grid-cols-2 grid-rows-1 gap-4">
+              <div class="grid grid-cols-2 grid-rows-1 gap-3">
                 <div>
                   <label class="input w-full">
                     <span class="label text-black">รถยนต์</span>
@@ -572,7 +635,7 @@ const copyReport = () => {
                 >
               </label>
 
-              <div class="grid grid-cols-2 grid-rows-1 gap-4">
+              <div class="grid grid-cols-2 grid-rows-1 gap-3">
                 <div>
                   <label class="input w-full">
                     <span class="label text-black">รถยนต์</span>
@@ -606,7 +669,7 @@ const copyReport = () => {
                 <span class="label-text mb-1">🔴 ผลการปฏิบัติ Line bot</span>
               </label>
 
-              <div class="grid grid-cols-2 grid-rows-2 gap-4">
+              <div class="grid grid-cols-2 grid-rows-2 gap-3">
                 <div>
                   <label class="input w-full">
                     <span class="label text-black">รถยนต์</span>
@@ -655,7 +718,7 @@ const copyReport = () => {
                 >
               </label>
 
-              <div class="grid grid-cols-1 grid-rows-5 gap-4">
+              <div class="grid grid-cols-1 grid-rows-5 gap-3">
                 <div>
                   <label class="input w-full">
                     <span class="label text-black"
@@ -736,7 +799,7 @@ const copyReport = () => {
                 <span class="label-text mb-1">🔴 ตรวจยึดยานพาหนะ ตรวจสอบ</span>
               </label>
 
-              <div class="grid grid-cols-2 grid-rows-1 gap-4">
+              <div class="grid grid-cols-2 grid-rows-1 gap-3">
                 <div>
                   <label class="input w-full">
                     <span class="label text-black">รถยนต์</span>
@@ -774,7 +837,7 @@ const copyReport = () => {
                 >
               </label>
 
-              <div class="grid grid-cols-1 grid-rows-3 gap-4">
+              <div class="grid grid-cols-1 grid-rows-3 gap-3">
                 <div>
                   <label class="input w-full">
                     <span class="label text-black"
@@ -821,7 +884,7 @@ const copyReport = () => {
                 <span class="label-text mb-1">🔴 ผลการจับกุมข้อหาต่าง ๆ</span>
               </label>
 
-              <div class="grid grid-cols-2 grid-rows-3 gap-4">
+              <div class="grid grid-cols-2 grid-rows-3 gap-3">
                 <div>
                   <label class="input w-full">
                     <span class="label text-black">พ.ร.บ.ยาเสพติด</span>
@@ -895,7 +958,7 @@ const copyReport = () => {
           </div>
           <!-- ปุ่มส่งฟอร์ม -->
           <div class="flex justify-between items-center">
-            <button type="submit" class="btn btn-primary w-32">
+            <button @click="saveToGoogleSheet" class="btn btn-primary">
               บันทึกข้อมูล
             </button>
             <button type="submit" class="btn btn-secondary w-32">
@@ -906,7 +969,7 @@ const copyReport = () => {
       </div>
 
       <!-- แสดงผลรายงาน -->
-      <div v-if="report" class="mt-8 bg-base-100 shadow-lg rounded-lg p-6">
+      <div v-if="report" class="mt-4 bg-base-100 shadow-lg rounded-lg p-6">
         <div class="flex justify-between items-center mb-4">
           <h2 class="text-xl font-semibold">รายงานที่สร้าง</h2>
           <div class="text-sm text-gray-500">
