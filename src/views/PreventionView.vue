@@ -8,6 +8,7 @@ import "dayjs/locale/th"; // นำเข้า locale ภาษาไทย
 // ใช้ plugin BuddhistEra และตั้งค่า locale เป็นภาษาไทย
 dayjs.extend(buddhistEra);
 dayjs.locale("th"); // ตั้งค่า locale เป็นภาษาไทย
+import axios from "axios";
 
 const router = useRouter();
 
@@ -283,7 +284,7 @@ const generateReport = () => {
 
     let arrests = [];
     if (formData.value.drugArrestCount)
-      arrests.push(`- พ.ร.บ.ยาเสพติด ${formData.value.drugArrestCount} ราย`);
+      arrests.push(`- ป.ยาเสพติด ${formData.value.drugArrestCount} ราย`);
     if (formData.value.gunArrestCount)
       arrests.push(`- พ.ร.บ.อาวุธปืน ${formData.value.gunArrestCount} ราย`);
     if (formData.value.gamblingArrestCount)
@@ -317,15 +318,17 @@ const copyReport = () => {
 };
 
 const saveToGoogleSheet = async () => {
-  const url = new URL(
-    "https://script.google.com/macros/s/AKfycbx43b0pCxjMUA_WvmywN_NUn5srlmVb2EXlfL4UiAOAjT3AALEmEMueQmZlDagusGiBbQ/exec"
-  );
-  const params = new URLSearchParams({
+  const url =
+    "https://script.google.com/macros/s/AKfycbx43b0pCxjMUA_WvmywN_NUn5srlmVb2EXlfL4UiAOAjT3AALEmEMueQmZlDagusGiBbQ/exec";
+
+  const payload = {
     dateTime: formData.value.dateTime || "",
     workType: formData.value.workType || "",
     teamLeader: formData.value.teamLeader || "",
     teamName: formData.value.teamName || "",
-    actions: formData.value.actions || "",
+    actions: Array.isArray(formData.value.actions)
+      ? formData.value.actions.join(", ")
+      : "",
     gasStationCount: formData.value.gasStationCount || 0,
     bankCount: formData.value.bankCount || 0,
     goldShopCount: formData.value.goldShopCount || 0,
@@ -352,35 +355,36 @@ const saveToGoogleSheet = async () => {
     otherArrestCount: formData.value.otherArrestCount || 0,
     localWarrantCount: formData.value.localWarrantCount || 0,
     otherWarrantCount: formData.value.otherWarrantCount || 0,
-  });
-
-  url.search = params.toString();
+  };
 
   try {
-    const response = await fetch(url, { method: "GET" });
-    const text = await response.text(); // อ่าน response เป็น text ก่อน
-    let result;
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload), // ส่งข้อมูลในรูปแบบ JSON
+    });
 
-    try {
-      result = JSON.parse(text); // แปลงเป็น JSON
-    } catch (jsonError) {
-      console.error("JSON Parse Error:", jsonError, "Response Text:", text);
-      alert("เกิดข้อผิดพลาดในการบันทึก: ไม่สามารถแปลงข้อมูล JSON");
-      return;
+    if (!response.ok) {
+      throw new Error(`HTTP Error! Status: ${response.status}`);
     }
 
-    console.log(result);
-    if (result.status === "success") {
-      alert("บันทึกข้อมูลสำเร็จ!");
+    const data = await response.json();
+    console.log("Response Data:", data);
+
+    if (data.status === "success") {
+      alert(data.message);
     } else {
-      alert("เกิดข้อผิดพลาด: " + result.message);
+      alert("เกิดข้อผิดพลาด: " + (data.message || "ไม่ทราบสาเหตุ"));
     }
   } catch (error) {
     console.error("Error:", error);
-    alert("เกิดข้อผิดพลาดในการบันทึก");
+    alert("เกิดข้อผิดพลาดในการส่งข้อมูล!");
   }
 };
 </script>
+
 <template>
   <div class="min-h-screen bg-base-200 flex flex-col">
     <div class="container mx-auto px-4 py-8">
@@ -887,7 +891,7 @@ const saveToGoogleSheet = async () => {
               <div class="grid grid-cols-2 grid-rows-3 gap-3">
                 <div>
                   <label class="input w-full">
-                    <span class="label text-black">พ.ร.บ.ยาเสพติด</span>
+                    <span class="label text-black">ยาเสพติด</span>
                     <input
                       type="number"
                       v-model="formData.drugArrestCount"
@@ -898,7 +902,7 @@ const saveToGoogleSheet = async () => {
                 </div>
                 <div>
                   <label class="input w-full">
-                    <span class="label text-black">พ.ร.บ.อาวุธปืน</span>
+                    <span class="label text-black">อาวุธปืน</span>
                     <input
                       type="number"
                       v-model="formData.gunArrestCount"
@@ -909,7 +913,7 @@ const saveToGoogleSheet = async () => {
                 </div>
                 <div>
                   <label class="input w-full">
-                    <span class="label text-black">พ.ร.บ.การพนัน</span>
+                    <span class="label text-black">การพนัน</span>
                     <input
                       type="number"
                       v-model="formData.gamblingArrestCount"
@@ -933,7 +937,7 @@ const saveToGoogleSheet = async () => {
                 </div>
                 <div>
                   <label class="input w-full">
-                    <span class="label text-black">หมายจับ สภ.เทพา</span>
+                    <span class="label text-black">หมายจับ</span>
                     <input
                       type="number"
                       v-model="formData.localWarrantCount"
