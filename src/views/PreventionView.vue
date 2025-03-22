@@ -363,7 +363,7 @@ const saveToGoogleSheet = async () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(payload), // ส่งข้อมูลในรูปแบบ JSON
+      body: JSON.stringify(payload),
     });
 
     if (!response.ok) {
